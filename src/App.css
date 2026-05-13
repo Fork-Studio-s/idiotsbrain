@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap");
 
 body {
   margin: 0;
   overflow: hidden;
-  background-color: #f7f7f5; /* A soft, calming off-white instead of harsh pure white */
+  background-color: #f7f7f5;
+  /* A soft, calming off-white instead of harsh pure white */
 }
 
 /* --- THE NEW STRUCTURAL HUD CARD --- */
@@ -13,59 +13,84 @@ body {
   bottom: 10px;
   left: 10px;
   width: 300px;
-  
+
   display: flex;
   flex-direction: column;
-  gap: 2px; /* 2px vertical gap between the rows */
+  gap: 2px;
+  /* 2px vertical gap between the rows */
   z-index: 30;
   pointer-events: auto;
-  
+
   /* Font styling matching your requirements */
-  font-family: 'Inter', sans-serif;
-  font-weight: 400; /* Regular */
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  /* Regular */
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.75); /* White at 75% */
+  color: rgba(255, 255, 255, 0.75);
+  /* White at 75% */
   text-transform: uppercase;
-  
+
   animation: slideUpFade 0.4s ease-out forwards;
 }
 
 @keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fbc-row {
   display: flex;
   flex-direction: row;
-  gap: 2px; /* 2px horizontal gap between left/right blocks */
+  gap: 2px;
+  /* 2px horizontal gap between left/right blocks */
   width: 100%;
 }
 
 .fbc-info {
-  width: 83px; /* Exact fixed width for the left column */
-  flex-shrink: 0; /* Prevents it from shrinking below 83px */
-  padding: 5px 10px 5px 10px; 
+  width: 83px;
+  /* Exact fixed width for the left column */
+  flex-shrink: 0;
+  /* Prevents it from shrinking below 83px */
+  padding: 5px 10px 5px 10px;
   box-sizing: border-box;
-  
-  background-color: rgba(0, 0, 0, 0.35); /* Black 35% */
+
+  background-color: rgba(0, 0, 0, 0.35);
+  /* Black 35% */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  /* THE CHROME FIX */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform, backdrop-filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .fbc-data {
-  flex: 1; /* Automatically fills the remaining width */
-  padding: 5px 10px 5px 10px; /* Hug padding */
+  flex: 1;
+  /* Automatically fills the remaining width */
+  padding: 5px 10px 5px 10px;
+  /* Hug padding */
   box-sizing: border-box;
-  
-  background-color: rgba(0, 0, 0, 0.35); /* Black 35% */
+
+  background-color: rgba(0, 0, 0, 0.35);
+  /* Black 35% */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform, backdrop-filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
+
 /* --- THE DREAMY WHITE VIGNETTE --- */
 .frosted-frame {
   position: absolute;
@@ -73,28 +98,34 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none; 
-  
+  pointer-events: none;
+
   /* A soft, milky white overlay instead of the dark tint */
-  background-color: rgba(255, 255, 255, 0.1); 
-  
+  background-color: rgba(255, 255, 255, 0.1);
+
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  
-  -webkit-mask-image: radial-gradient(circle at center, transparent 35%, black 100%);
+
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    transparent 35%,
+    black 100%
+  );
   mask-image: radial-gradient(circle at center, transparent 35%, black 100%);
-  
+
   z-index: 10;
 }
 
 /* --- THE NEW EDITORIAL NAVIGATION BAR --- */
 .nav-container {
   position: absolute;
-  top: 2px;  /* Margin top */
-  left: 2px; /* Margin left */
+  top: 2px;
+  /* Margin top */
+  left: 2px;
+  /* Margin left */
   display: flex;
   z-index: 20;
-  pointer-events: none; 
+  pointer-events: none;
 }
 
 .nav-left {
@@ -103,79 +134,88 @@ body {
 
 .nav-item {
   /* Padding: Top 10px, Right 120px, Bottom 10px, Left 10px */
-  padding: 5px 120px 5px 10px; 
-  
+  padding: 5px 120px 5px 10px;
+
   /* Gap between buttons: exactly 2px */
-  margin-right: 2px; 
-  
+  margin-right: 2px;
+
   /* Width: fit (adapts perfectly to text + padding) */
   width: fit-content;
-  
+
   /* Fill: Black at 35% opacity */
-  background-color: rgba(0, 0, 0, 0.35); 
-  
+  background-color: rgba(0, 0, 0, 0.35);
+
   /* Text: White at 75% opacity */
-  color: rgba(255, 255, 255, 0.75); 
-  font-family: 'Inter', sans-serif;
-  
+  color: rgba(255, 255, 255, 0.75);
+  font-family: "Inter", sans-serif;
+
   /* CHANGED HERE: 400 is the standard for "Regular" weight */
-  font-weight: 400; 
-  
+  font-weight: 400;
+
   font-size: 12px;
-  text-transform: uppercase; 
-  
+  text-transform: uppercase;
+
   /* Centers the text vertically since top and bottom padding are equal */
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  
+
   /* The Dreamy Background Blur */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(10px);
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  
-  border-radius: 0px; 
-  
-  pointer-events: auto; 
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform, backdrop-filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  border-radius: 0px;
+
+  pointer-events: auto;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Make sure the very last item doesn't have an extra margin pushing it out */
 .nav-item:last-child {
-  margin-right: 0; 
+  margin-right: 0;
 }
 
 /* Hover & Selected States */
-.nav-item:hover, .nav-item.selected {
-  background-color: rgba(0, 0, 0, 0.5); /* Slightly darker on hover */
-  color: rgba(255, 255, 255, 1); /* Full white text on hover */
+.nav-item:hover,
+.nav-item.selected {
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Slightly darker on hover */
+  color: rgba(255, 255, 255, 1);
+  /* Full white text on hover */
 }
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 768px) {
-  
   /* 1. Make the navigation container fill the entire width of the screen */
   .nav-container {
-    width: calc(100vw - 4px); /* 100% of viewport width, minus the 2px left and 2px right margins */
+    width: calc(100vw - 4px);
+    /* 100% of viewport width, minus the 2px left and 2px right margins */
     right: 2px;
   }
 
   /* 2. Adjust the buttons to fit */
   .nav-item {
     /* Remove the massive 120px right padding and use equal 10px padding */
-    padding: 5px 10px 5px 10px; 
-    
+    padding: 5px 10px 5px 10px;
+
     /* Tell flexbox to make all 3 buttons share the available width equally */
-    flex: 1; 
-    
+    flex: 1;
+
     /* Keep the text aligned to the left */
     justify-content: flex-start;
   }
 
   /* 3. Also make sure the bottom HUD card doesn't overflow on very tiny phones */
   .fbc-container {
-    width: calc(100vw - 20px); /* 100% width minus the 10px left and 10px right margins */
+    width: calc(100vw - 20px);
+    /* 100% width minus the 10px left and 10px right margins */
   }
 }

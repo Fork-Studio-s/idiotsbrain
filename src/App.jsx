@@ -227,7 +227,9 @@ export default function App() {
   return (
     <div id="canvas-container" style={{ width: '100vw', height: '100dvh', position: 'relative' }}>
       
-      <Canvas camera={{ position: [0, 0, 70] }}> 
+      <Canvas camera={{ position: [0, 0, 70] }}
+        gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
+        > 
         <color attach="background" args={['#ffffff']} /> 
         <fog attach="fog" args={['#ffffff', 30, 90]} /> 
 
