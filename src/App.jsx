@@ -10,12 +10,12 @@ function SmartImage({ data, index, activeNode, setActiveNode }) {
   const texture = useTexture(data.url);
   const imageAspect = texture.image ? texture.image.width / texture.image.height : 1;
 
-  const fixedWidth = 4.0; 
+  const fixedWidth = 4.0;
   const calculatedHeight = fixedWidth / imageAspect;
 
   const billboardRef = useRef();
-  const meshRef = useRef(); 
-  const materialRef = useRef(); 
+  const meshRef = useRef();
+  const materialRef = useRef();
 
   const isClicked = activeNode !== null;
   const inActiveGroup = isClicked && activeNode.groupId === data.groupId;
@@ -48,7 +48,7 @@ function SmartImage({ data, index, activeNode, setActiveNode }) {
     if (!isClicked) {
       gsap.to(meshRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.8, ease: "power3.out" });
       gsap.to(materialRef.current, { opacity: 1, duration: 0.8, ease: "power2.out" });
-      gsap.to(materialRef.current.color, { r: 1, g: 1, b: 1, duration: 0.8 }); 
+      gsap.to(materialRef.current.color, { r: 1, g: 1, b: 1, duration: 0.8 });
     } else if (inActiveGroup) {
       gsap.to(meshRef.current.scale, { x: 1.35, y: 1.35, z: 1.35, duration: 0.8, ease: "back.out(1.5)" });
       gsap.to(materialRef.current, { opacity: 1, duration: 0.8, ease: "power2.out" });
@@ -56,12 +56,12 @@ function SmartImage({ data, index, activeNode, setActiveNode }) {
     } else if (isUnrelated) {
       gsap.to(meshRef.current.scale, { x: 0.7, y: 0.7, z: 0.7, duration: 0.8, ease: "power3.out" });
       gsap.to(materialRef.current, { opacity: 0.15, duration: 0.8, ease: "power2.out" });
-      gsap.to(materialRef.current.color, { r: 0.3, g: 0.3, b: 0.3, duration: 0.8 }); 
+      gsap.to(materialRef.current.color, { r: 0.3, g: 0.3, b: 0.3, duration: 0.8 });
     }
   }, [isClicked, inActiveGroup, isUnrelated]);
 
   const handlePointerOver = (e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     document.body.style.cursor = 'pointer';
     if (!inActiveGroup && !isUnrelated) {
       gsap.to(meshRef.current.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 0.4, ease: "back.out(1.5)" });
@@ -86,18 +86,18 @@ function SmartImage({ data, index, activeNode, setActiveNode }) {
 
   return (
     <Billboard ref={billboardRef} position={[0, 0, 0]}>
-      <mesh 
+      <mesh
         ref={meshRef}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         onClick={handleClick}
       >
         <planeGeometry args={[fixedWidth, calculatedHeight]} />
-        <meshBasicMaterial 
-          ref={materialRef} 
-          map={texture} 
-          side={THREE.DoubleSide} 
-          transparent={true} 
+        <meshBasicMaterial
+          ref={materialRef}
+          map={texture}
+          side={THREE.DoubleSide}
+          transparent={true}
         />
       </mesh>
     </Billboard>
@@ -108,18 +108,18 @@ function SmartImage({ data, index, activeNode, setActiveNode }) {
 // Notice we pass activeNode and setActiveNode in as props now!
 function ParticleUniverse({ activeNode, setActiveNode }) {
   const groupRef = useRef();
-  
+
   // NEW: A ref to hold the rotating animation so we can pause it
   const rotationAnim = useRef(null);
-  
+
   const imageCount = 48;
-  const globeRadius = 35; 
+  const globeRadius = 35;
 
   const imageData = useMemo(() => {
     let images = Array.from({ length: imageCount }, (_, i) => {
-      const id = i + 1; 
+      const id = i + 1;
       let groupId = 3;
-      
+
       if (id >= 1 && id <= 6) groupId = 1;
       else if (id >= 7 && id <= 30) groupId = 2;
       else if (id >= 31 && id <= 48) groupId = 3;
@@ -132,11 +132,11 @@ function ParticleUniverse({ activeNode, setActiveNode }) {
       [images[i], images[j]] = [images[j], images[i]];
     }
 
-    const phi = Math.PI * (3 - Math.sqrt(5)); 
+    const phi = Math.PI * (3 - Math.sqrt(5));
     return images.map((img, i) => {
-      const y = 1 - (i / (imageCount - 1)) * 2; 
-      const radiusAtY = Math.sqrt(1 - y * y); 
-      const theta = phi * i; 
+      const y = 1 - (i / (imageCount - 1)) * 2;
+      const radiusAtY = Math.sqrt(1 - y * y);
+      const theta = phi * i;
 
       const posX = Math.cos(theta) * radiusAtY * globeRadius;
       const posY = y * globeRadius;
@@ -149,14 +149,14 @@ function ParticleUniverse({ activeNode, setActiveNode }) {
   // INIT GLOBE ROTATION
   useEffect(() => {
     if (!groupRef.current) return;
-    
+
     groupRef.current.rotation.z = 0.2;
     groupRef.current.rotation.x = 0.1;
 
     // We assign the GSAP animation to our ref
     rotationAnim.current = gsap.to(groupRef.current.rotation, {
       y: `+=${Math.PI * 2}`, // Using relative math makes pausing/playing smoother
-      duration: 120, 
+      duration: 120,
       repeat: -1,
       ease: "none",
     });
@@ -186,12 +186,12 @@ function ParticleUniverse({ activeNode, setActiveNode }) {
   return (
     <group ref={groupRef} onPointerMissed={handleMissedClick}>
       {imageData.map((data, index) => (
-        <SmartImage 
-          key={data.id} 
-          data={data} 
-          index={index} 
-          activeNode={activeNode} 
-          setActiveNode={setActiveNode} 
+        <SmartImage
+          key={data.id}
+          data={data}
+          index={index}
+          activeNode={activeNode}
+          setActiveNode={setActiveNode}
         />
       ))}
 
@@ -201,10 +201,10 @@ function ParticleUniverse({ activeNode, setActiveNode }) {
           <Line
             key={`line-${activeNode.id}-${relatedImg.id}`}
             points={[activeNode.position, relatedImg.position]}
-            color="#555555" 
-            lineWidth={0.8} 
+            color="#555555"
+            lineWidth={0.8}
             transparent={true}
-            opacity={0.5} 
+            opacity={0.5}
           />
         ))
       }
@@ -219,13 +219,13 @@ export default function App() {
   // Helper function to figure out the title based on the group
   const getGroupName = (groupId) => {
     if (groupId === 1) return "Analogue";
-    if (groupId === 2) return "Aditya Tantra";
+    if (groupId === 2) return "Campaign Aditya Tantra";
     if (groupId === 3) return "Dongker";
     return "Archive";
   };
 
   return (
-    <div id="canvas-container" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+    <div id="canvas-container" style={{ width: '100vw', height: '100dvh', position: 'relative' }}>
       
       <Canvas camera={{ position: [0, 0, 70] }}> 
         <color attach="background" args={['#ffffff']} /> 
@@ -276,7 +276,6 @@ export default function App() {
 
         </div>
       )}
-
 
     </div>
   );

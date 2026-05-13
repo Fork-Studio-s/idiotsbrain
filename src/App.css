@@ -51,6 +51,8 @@ body {
   background-color: rgba(0, 0, 0, 0.35); /* Black 35% */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .fbc-data {
@@ -61,6 +63,8 @@ body {
   background-color: rgba(0, 0, 0, 0.35); /* Black 35% */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 /* --- THE DREAMY WHITE VIGNETTE --- */
 .frosted-frame {
@@ -128,6 +132,8 @@ body {
   /* The Dreamy Background Blur */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   
   border-radius: 0px; 
   
