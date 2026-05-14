@@ -225,14 +225,18 @@ export default function App() {
   };
 
   return (
-    <div id="canvas-container" style={{ width: '100vw', height: '100dvh', position: 'relative' }}>
-      
-      <Canvas camera={{ position: [0, 0, 70] }}
-        gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
-        > 
-        <color attach="background" args={['#ffffff']} /> 
-        <fog attach="fog" args={['#ffffff', 30, 90]} /> 
+    {/* 1. REMOVED 'isolation: isolate' from this wrapper */ }
+    < div id = "canvas-container" style = {{ width: '100vw', height: '100dvh', position: 'relative' }
+}>
 
+  {/* 2. ADDED absolute positioning and a strict zIndex of 1 */ }
+  < Canvas
+style = {{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+camera = {{ position: [0, 0, 70] }}
+gl = {{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
+      > 
+        <color attach="background" args={['#ffffff']} /> 
+        <fog attach="fog" args={['#ffffff', 30, 90]} />
         <OrbitControls
           enableDamping={true}
           dampingFactor={0.05}
@@ -243,42 +247,44 @@ export default function App() {
         <Suspense fallback={null}>
           <ParticleUniverse activeNode={activeNode} setActiveNode={setActiveNode} />
         </Suspense>
-      </Canvas>
+      </Canvas >
 
-      <div className="frosted-frame"></div>
+  <div className="frosted-frame"></div>
 
-      {/* TOP LEFT: THE STUDIO NAVIGATION */}
-      <div className="nav-container">
-        <div className="nav-item selected">Idiotsbrain</div>
-        <div className="nav-item">Projects</div>
-        <div className="nav-item">Information</div>
+{/* TOP LEFT: THE STUDIO NAVIGATION */ }
+<div className="nav-container">
+  <div className="nav-item selected">Idiotsbrain</div>
+  <div className="nav-item">Projects</div>
+  <div className="nav-item">Information</div>
+</div>
+
+{/* BOTTOM LEFT: THE STRUCTURAL DETAILS CARD */ }
+{
+  activeNode && (
+    <div className="fbc-container">
+
+      {/* Row 1: Project */}
+      <div className="fbc-row">
+        <div className="fbc-info">Project</div>
+        <div className="fbc-data">{getGroupName(activeNode.groupId)}</div>
       </div>
 
-      {/* BOTTOM LEFT: THE STRUCTURAL DETAILS CARD */}
-      {activeNode && (
-        <div className="fbc-container">
-          
-          {/* Row 1: Project */}
-          <div className="fbc-row">
-            <div className="fbc-info">Project</div>
-            <div className="fbc-data">{getGroupName(activeNode.groupId)}</div>
-          </div>
-          
-          {/* Row 2: Type */}
-          <div className="fbc-row">
-            <div className="fbc-info">Type</div>
-            <div className="fbc-data">Archive Core {activeNode.id}</div>
-          </div>
-          
-          {/* Row 3: Year */}
-          <div className="fbc-row">
-            <div className="fbc-info">Year</div>
-            <div className="fbc-data">2024</div>
-          </div>
+      {/* Row 2: Type */}
+      <div className="fbc-row">
+        <div className="fbc-info">Type</div>
+        <div className="fbc-data">Archive Core {activeNode.id}</div>
+      </div>
 
-        </div>
-      )}
+      {/* Row 3: Year */}
+      <div className="fbc-row">
+        <div className="fbc-info">Year</div>
+        <div className="fbc-data">2024</div>
+      </div>
 
     </div>
+  )
+}
+
+    </div >
   );
 }

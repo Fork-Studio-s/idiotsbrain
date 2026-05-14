@@ -54,41 +54,26 @@ body {
 }
 
 .fbc-info {
-  width: 83px;
-  /* Exact fixed width for the left column */
-  flex-shrink: 0;
-  /* Prevents it from shrinking below 83px */
-  padding: 5px 10px 5px 10px;
+  width: 83px; 
+  flex-shrink: 0; 
+  padding: 5px 10px; 
   box-sizing: border-box;
-
-  background-color: rgba(0, 0, 0, 0.35);
-  /* Black 35% */
+  background-color: rgba(0, 0, 0, 0.35); 
+  
+  /* Just the pure blur */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  /* THE CHROME FIX */
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  will-change: transform, backdrop-filter;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .fbc-data {
-  flex: 1;
-  /* Automatically fills the remaining width */
-  padding: 5px 10px 5px 10px;
-  /* Hug padding */
+  flex: 1; 
+  padding: 5px 10px; 
   box-sizing: border-box;
-
-  background-color: rgba(0, 0, 0, 0.35);
-  /* Black 35% */
+  background-color: rgba(0, 0, 0, 0.35); 
+  
+  /* Just the pure blur */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  will-change: transform, backdrop-filter;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 /* --- THE DREAMY WHITE VIGNETTE --- */
@@ -133,49 +118,27 @@ body {
 }
 
 .nav-item {
-  /* Padding: Top 10px, Right 120px, Bottom 10px, Left 10px */
-  padding: 5px 120px 5px 10px;
-
-  /* Gap between buttons: exactly 2px */
-  margin-right: 2px;
-
-  /* Width: fit (adapts perfectly to text + padding) */
+  padding: 5px 120px 5px 10px; 
+  margin-right: 2px; 
   width: fit-content;
-
-  /* Fill: Black at 35% opacity */
-  background-color: rgba(0, 0, 0, 0.35);
-
-  /* Text: White at 75% opacity */
-  color: rgba(255, 255, 255, 0.75);
-  font-family: "Inter", sans-serif;
-
-  /* CHANGED HERE: 400 is the standard for "Regular" weight */
-  font-weight: 400;
-
+  background-color: rgba(0, 0, 0, 0.35); 
+  color: rgba(255, 255, 255, 0.75); 
+  font-family: 'Inter', sans-serif;
+  font-weight: 400; 
   font-size: 12px;
-  text-transform: uppercase;
-
-  /* Centers the text vertically since top and bottom padding are equal */
+  text-transform: uppercase; 
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
-  /* The Dreamy Background Blur */
+  
+  /* Just the pure blur, no transform hacks! */
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  will-change: transform, backdrop-filter;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-
-  border-radius: 0px;
-
-  pointer-events: auto;
+  -webkit-backdrop-filter: blur(20px);
+  
+  border-radius: 0px; 
+  pointer-events: auto; 
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Make sure the very last item doesn't have an extra margin pushing it out */
@@ -203,19 +166,19 @@ body {
 
   /* 2. Adjust the buttons to fit */
   .nav-item {
-    /* Remove the massive 120px right padding and use equal 10px padding */
-    padding: 5px 10px 5px 10px;
-
-    /* Tell flexbox to make all 3 buttons share the available width equally */
-    flex: 1;
-
-    /* Keep the text aligned to the left */
+    padding: 5px 10px 5px 10px; 
+    flex: 1; 
     justify-content: flex-start;
+    /* REVERTED back to 35% opacity to allow the blur to show */
+    background-color: rgba(0, 0, 0, 0.35);
   }
 
   /* 3. Also make sure the bottom HUD card doesn't overflow on very tiny phones */
   .fbc-container {
     width: calc(100vw - 20px);
     /* 100% width minus the 10px left and 10px right margins */
+  }
+  .fbc-info, .fbc-data {
+    background-color: rgba(0, 0, 0, 0.35);
   }
 }
