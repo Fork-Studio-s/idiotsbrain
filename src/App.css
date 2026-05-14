@@ -1,10 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap");
 
+#canvas-container {
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
 body {
   margin: 0;
   overflow: hidden;
   background-color: #f7f7f5;
   /* A soft, calming off-white instead of harsh pure white */
+}
+
+#canvas-container {
+  isolation: isolate;
 }
 
 /* --- THE NEW STRUCTURAL HUD CARD --- */
@@ -84,6 +93,8 @@ body {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0);
 
   /* A soft, milky white overlay instead of the dark tint */
   background-color: rgba(255, 255, 255, 0.1);
@@ -139,6 +150,9 @@ body {
   pointer-events: auto; 
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  transform: translateZ(0);
+  will-change: backdrop-filter;
+  background-color: rgba(20, 20, 20, 0.7);
 }
 
 /* Make sure the very last item doesn't have an extra margin pushing it out */
@@ -170,7 +184,10 @@ body {
     flex: 1; 
     justify-content: flex-start;
     /* REVERTED back to 35% opacity to allow the blur to show */
-    background-color: rgba(0, 0, 0, 0.35);
+     background-color: rgba(0, 0, 0, 0.55); /* fallback, slightly darker */
+     background-color: rgba(0, 0, 0, 0.35); /* original, used when blur works */
+    transform: translateZ(0);
+    will-change: backdrop-filter;
   }
 
   /* 3. Also make sure the bottom HUD card doesn't overflow on very tiny phones */
@@ -180,5 +197,8 @@ body {
   }
   .fbc-info, .fbc-data {
     background-color: rgba(0, 0, 0, 0.35);
+    transform: translateZ(0);
+    will-change: backdrop-filter;
+    
   }
 }
