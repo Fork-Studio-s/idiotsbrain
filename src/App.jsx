@@ -1,200 +1,107 @@
 import { useMemo, Suspense, useRef, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useTexture, Billboard, Line, Html } from '@react-three/drei';
+import { OrbitControls, useTexture, Billboard, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import './App.css';
 
-// --- 1. THE INTERACTIVE SMART IMAGE (Cleaned of all text!) ---
-function SmartImage({ data, index, activeNode, setActiveNode }) {
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return isMobile;
+}
+
+function SmartImage({ data, activeNode, setActiveNode, isMobile }) {
   const texture = useTexture(data.url);
   const imageAspect = texture.image ? texture.image.width / texture.image.height : 1;
-
-  const fixedWidth = 4.0;
-  const calculatedHeight = fixedWidth / imageAspect;
-
-  const billboardRef = useRef();
   const meshRef = useRef();
   const materialRef = useRef();
+  const billboardRef = useRef();
 
-  const isClicked = activeNode !== null;
-  const inActiveGroup = isClicked && activeNode.groupId === data.groupId;
-  const isUnrelated = isClicked && activeNode.groupId !== data.groupId;
+  const imgWidth = isMobile ? 3.2 : 4.0;
 
-  // ENTRANCE ANIMATION
   useEffect(() => {
-    if (!billboardRef.current || !meshRef.current) return;
-
-    const [targetX, targetY, targetZ] = data.position;
-    const startX = targetX * 0.1;
-    const startY = targetY * 0.1;
-    const startZ = targetZ * 0.1;
-
+    if (!billboardRef.current) return;
+    const [tx, ty, tz] = data.position;
     gsap.fromTo(billboardRef.current.position,
-      { x: startX, y: startY, z: startZ },
-      { x: targetX, y: targetY, z: targetZ, duration: 4.0, delay: 0.8, ease: "expo.out" }
-    );
-
-    gsap.fromTo(meshRef.current.scale,
-      { x: 0, y: 0, z: 0 },
-      { x: 1, y: 1, z: 1, duration: 3.0, delay: 0.8, ease: "elastic.out(1, 0.8)" }
+      { x: tx * 0.1, y: ty * 0.1, z: tz * 0.1 },
+      { x: tx, y: ty, z: tz, duration: 3.5, ease: "expo.out" }
     );
   }, [data.position]);
 
-  // FOCUS / "BLUR" ANIMATION
+  const isClicked = activeNode !== null;
+  const inActiveGroup = isClicked && activeNode.groupId === data.groupId;
+
   useEffect(() => {
-    if (!meshRef.current || !materialRef.current) return;
-
+    if (!meshRef.current) return;
     if (!isClicked) {
-      gsap.to(meshRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.8, ease: "power3.out" });
-      gsap.to(materialRef.current, { opacity: 1, duration: 0.8, ease: "power2.out" });
-      gsap.to(materialRef.current.color, { r: 1, g: 1, b: 1, duration: 0.8 });
+      gsap.to(meshRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.6 });
+      gsap.to(materialRef.current, { opacity: 1, duration: 0.6 });
+      gsap.to(materialRef.current.color, { r: 1, g: 1, b: 1, duration: 0.6 });
     } else if (inActiveGroup) {
-      gsap.to(meshRef.current.scale, { x: 1.35, y: 1.35, z: 1.35, duration: 0.8, ease: "back.out(1.5)" });
-      gsap.to(materialRef.current, { opacity: 1, duration: 0.8, ease: "power2.out" });
-      gsap.to(materialRef.current.color, { r: 1, g: 1, b: 1, duration: 0.8 });
-    } else if (isUnrelated) {
-      gsap.to(meshRef.current.scale, { x: 0.7, y: 0.7, z: 0.7, duration: 0.8, ease: "power3.out" });
-      gsap.to(materialRef.current, { opacity: 0.15, duration: 0.8, ease: "power2.out" });
-      gsap.to(materialRef.current.color, { r: 0.3, g: 0.3, b: 0.3, duration: 0.8 });
-    }
-  }, [isClicked, inActiveGroup, isUnrelated]);
-
-  const handlePointerOver = (e) => {
-    e.stopPropagation();
-    document.body.style.cursor = 'pointer';
-    if (!inActiveGroup && !isUnrelated) {
-      gsap.to(meshRef.current.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 0.4, ease: "back.out(1.5)" });
-    }
-  };
-
-  const handlePointerOut = (e) => {
-    document.body.style.cursor = 'auto';
-    if (!inActiveGroup && !isUnrelated) {
-      gsap.to(meshRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.4, ease: "power2.out" });
-    }
-  };
-
-  const handleClick = (e) => {
-    e.stopPropagation();
-    if (activeNode && activeNode.id === data.id) {
-      setActiveNode(null);
+      gsap.to(meshRef.current.scale, { x: 1.25, y: 1.25, z: 1.25, duration: 0.6 });
+      gsap.to(materialRef.current, { opacity: 1, duration: 0.6 });
     } else {
-      setActiveNode(data);
+      gsap.to(meshRef.current.scale, { x: 0.7, y: 0.7, z: 0.7, duration: 0.6 });
+      gsap.to(materialRef.current, { opacity: 0.15, duration: 0.6 });
+      gsap.to(materialRef.current.color, { r: 0.3, g: 0.3, b: 0.3, duration: 0.6 });
     }
-  };
+  }, [isClicked, inActiveGroup]);
 
   return (
-    <Billboard ref={billboardRef} position={[0, 0, 0]}>
+    <Billboard ref={billboardRef}>
       <mesh
         ref={meshRef}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
-        onClick={handleClick}
+        onClick={(e) => { e.stopPropagation(); setActiveNode(data); }}
+        onPointerOver={() => (document.body.style.cursor = 'pointer')}
+        onPointerOut={() => (document.body.style.cursor = 'auto')}
       >
-        <planeGeometry args={[fixedWidth, calculatedHeight]} />
-        <meshBasicMaterial
-          ref={materialRef}
-          map={texture}
-          side={THREE.DoubleSide}
-          transparent={true}
-        />
+        <planeGeometry args={[imgWidth, imgWidth / imageAspect]} />
+        <meshBasicMaterial ref={materialRef} map={texture} transparent={true} />
       </mesh>
     </Billboard>
   );
 }
 
-// --- 2. THE GLOBE UNIVERSE COMPONENT ---
-// Notice we pass activeNode and setActiveNode in as props now!
-function ParticleUniverse({ activeNode, setActiveNode }) {
+function ParticleUniverse({ activeNode, setActiveNode, isMobile }) {
   const groupRef = useRef();
-
-  // NEW: A ref to hold the rotating animation so we can pause it
-  const rotationAnim = useRef(null);
-
-  const imageCount = 48;
-  const globeRadius = 35;
+  const rotationAnim = useRef();
+  const count = 48;
+  const globeRadius = isMobile ? 28 : 35;
 
   const imageData = useMemo(() => {
-    let images = Array.from({ length: imageCount }, (_, i) => {
-      const id = i + 1;
-      let groupId = 3;
-
-      if (id >= 1 && id <= 6) groupId = 1;
-      else if (id >= 7 && id <= 30) groupId = 2;
-      else if (id >= 31 && id <= 48) groupId = 3;
-
-      return { id, groupId, url: `/textures/img${id}.jpg` };
-    });
-
-    for (let i = images.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [images[i], images[j]] = [images[j], images[i]];
-    }
-
     const phi = Math.PI * (3 - Math.sqrt(5));
-    return images.map((img, i) => {
-      const y = 1 - (i / (imageCount - 1)) * 2;
-      const radiusAtY = Math.sqrt(1 - y * y);
+    return Array.from({ length: count }, (_, i) => {
+      const y = 1 - (i / (count - 1)) * 2;
+      const r = Math.sqrt(1 - y * y) * globeRadius;
       const theta = phi * i;
-
-      const posX = Math.cos(theta) * radiusAtY * globeRadius;
-      const posY = y * globeRadius;
-      const posZ = Math.sin(theta) * radiusAtY * globeRadius;
-
-      return { ...img, position: [posX, posY, posZ] };
+      return {
+        id: i + 1,
+        groupId: (i + 1 <= 6) ? 1 : (i + 1 <= 30) ? 2 : 3,
+        url: `/textures/img${i + 1}.jpg`,
+        position: [Math.cos(theta) * r, y * globeRadius, Math.sin(theta) * r]
+      };
     });
+  }, [globeRadius]);
+
+  useEffect(() => {
+    rotationAnim.current = gsap.to(groupRef.current.rotation, { y: Math.PI * 2, duration: 130, repeat: -1, ease: "none" });
+    return () => rotationAnim.current.kill();
   }, []);
 
-  // INIT GLOBE ROTATION
   useEffect(() => {
-    if (!groupRef.current) return;
-
-    groupRef.current.rotation.z = 0.2;
-    groupRef.current.rotation.x = 0.1;
-
-    // We assign the GSAP animation to our ref
-    rotationAnim.current = gsap.to(groupRef.current.rotation, {
-      y: `+=${Math.PI * 2}`, // Using relative math makes pausing/playing smoother
-      duration: 120,
-      repeat: -1,
-      ease: "none",
-    });
-
-    return () => {
-      if (rotationAnim.current) rotationAnim.current.kill();
-    }
-  }, []);
-
-  // NEW: PAUSE OR PLAY BASED ON CLICK
-  useEffect(() => {
-    if (!rotationAnim.current) return;
-
-    if (activeNode !== null) {
-      // Something is clicked, freeze the globe!
-      rotationAnim.current.pause();
-    } else {
-      // Nothing is clicked, keep spinning!
-      rotationAnim.current.play();
-    }
+    activeNode ? rotationAnim.current.pause() : rotationAnim.current.play();
   }, [activeNode]);
 
-  const handleMissedClick = () => {
-    setActiveNode(null);
-  };
-
   return (
-    <group ref={groupRef} onPointerMissed={handleMissedClick}>
-      {imageData.map((data, index) => (
-        <SmartImage
-          key={data.id}
-          data={data}
-          index={index}
-          activeNode={activeNode}
-          setActiveNode={setActiveNode}
-        />
+    <group ref={groupRef} onPointerMissed={() => setActiveNode(null)}>
+      {imageData.map((d) => (
+        <SmartImage key={d.id} data={d} activeNode={activeNode} setActiveNode={setActiveNode} isMobile={isMobile} />
       ))}
-
       {activeNode && imageData
         .filter(img => img.groupId === activeNode.groupId && img.id !== activeNode.id)
         .map(relatedImg => (
@@ -202,9 +109,8 @@ function ParticleUniverse({ activeNode, setActiveNode }) {
             key={`line-${activeNode.id}-${relatedImg.id}`}
             points={[activeNode.position, relatedImg.position]}
             color="#555555"
-            lineWidth={0.8}
-            transparent={true}
-            opacity={0.5}
+            lineWidth={0.6}
+            transparent opacity={0.4}
           />
         ))
       }
@@ -212,75 +118,109 @@ function ParticleUniverse({ activeNode, setActiveNode }) {
   );
 }
 
-// --- 3. THE MAIN APP WRAPPER ---
-export default function App() {
-  const [activeNode, setActiveNode] = useState(null);
-
-  // Helper function to figure out the title based on the group
-  const getGroupName = (groupId) => {
-    if (groupId === 1) return "Analogue";
-    if (groupId === 2) return "Campaign Aditya Tantra";
-    if (groupId === 3) return "Dongker";
-    return "Archive";
-  };
+function InfoOverlay({ onClose }) {
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
 
   return (
-    <div id="canvas-container" style={{ width: '100vw', height: '100dvh', position: 'relative' }}>
+    <div className="info-overlay" onClick={onClose}>
+      <div className="info-panel" onClick={(e) => e.stopPropagation()}>
 
-      <Canvas
-        style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
-        camera={{ position: [0, 0, 70] }}
-        gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
-      >
-        <color attach="background" args={['#f7f7f5']} />
-        <fog attach="fog" args={['#ffffff', 30, 90]} />
-
-        <OrbitControls
-          enableDamping={true}
-          dampingFactor={0.05}
-          rotateSpeed={0.5}
-          autoRotate={activeNode === null}
-          autoRotateSpeed={0.5}
+        <img
+          className="info-image"
+          src="/textures/info-photo.jpeg"
+          alt="idiotsbrain"
         />
+
+        <div className="info-text-parent">
+
+          <div className="info-glass info-glass--title">
+            <p className="info-text">Information</p>
+          </div>
+
+          <div className="info-glass info-glass--body">
+            <p className="info-text info-text--body">
+              "idiotsbrain" simply comes out as a nickname game when i was 11
+              and i dont even know what that means, for me it just cool at that
+              time. but then i realize idiotsbrain not just a nickname, it is
+              the whole expression and passion, its an another side of myself
+              that can just express anything as an art without being scared to
+              be judge or seen.
+            </p>
+          </div>
+
+          <div className="info-glass info-glass--works-title">
+            <p className="info-text">Works</p>
+          </div>
+
+          <div className="info-works-row">
+            <div className="info-works-cell">
+              <p className="info-text">Director</p>
+            </div>
+            <div className="info-works-cell info-works-cell--project">
+              <p className="info-text info-text--body">MV - UH HUH - Davidbeatt</p>
+            </div>
+          </div>
+
+          <div className="info-works-row">
+            <div className="info-works-cell">
+              <p className="info-text">Director</p>
+            </div>
+            <div className="info-works-cell info-works-cell--project">
+              <p className="info-text info-text--body">MV - Little Plastic Dinosaur - Rickran</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [activeNode, setActiveNode] = useState(null);
+  const [showInfo, setShowInfo] = useState(false);
+  const isMobile = useIsMobile();
+
+  const getGroupName = (id) => id === 1 ? "Analogue" : id === 2 ? "Campaign Aditya Tantra" : "Dongker";
+
+  return (
+    <div id="canvas-container">
+      <Canvas
+        camera={{ position: [0, 0, isMobile ? 95 : 80], fov: isMobile ? 50 : 45 }}
+        gl={{ alpha: true, antialias: true }}
+      >
+        <fog attach="fog" args={['#f7f7f5', 50, isMobile ? 130 : 115]} />
+
+        <OrbitControls enableDamping autoRotate={!activeNode} autoRotateSpeed={0.5} />
         <Suspense fallback={null}>
-          <ParticleUniverse activeNode={activeNode} setActiveNode={setActiveNode} />
+          <ParticleUniverse activeNode={activeNode} setActiveNode={setActiveNode} isMobile={isMobile} />
         </Suspense>
       </Canvas>
 
       <div className="frosted-frame"></div>
 
-      {/* TOP LEFT: THE STUDIO NAVIGATION */}
       <div className="nav-container">
         <div className="nav-item selected">Idiotsbrain</div>
         <div className="nav-item">Projects</div>
-        <div className="nav-item">Information</div>
+        <div className={`nav-item${showInfo ? ' active' : ''}`} onClick={() => setShowInfo(prev => !prev)}>
+          {showInfo ? 'Close' : 'Information'}
+        </div>
       </div>
 
-      {/* BOTTOM LEFT: THE STRUCTURAL DETAILS CARD */}
       {activeNode && (
         <div className="fbc-container">
-
-          {/* Row 1: Project */}
-          <div className="fbc-row">
-            <div className="fbc-info">Project</div>
-            <div className="fbc-data">{getGroupName(activeNode.groupId)}</div>
-          </div>
-
-          {/* Row 2: Type */}
-          <div className="fbc-row">
-            <div className="fbc-info">Type</div>
-            <div className="fbc-data">Archive Core {activeNode.id}</div>
-          </div>
-
-          {/* Row 3: Year */}
-          <div className="fbc-row">
-            <div className="fbc-info">Year</div>
-            <div className="fbc-data">2024</div>
-          </div>
-
+          <div className="fbc-row"><div className="fbc-info">Project</div><div className="fbc-data">{getGroupName(activeNode.groupId)}</div></div>
+          <div className="fbc-row"><div className="fbc-info">Type</div><div className="fbc-data">Archive Core {activeNode.id}</div></div>
+          <div className="fbc-row"><div className="fbc-info">Year</div><div className="fbc-data">2024</div></div>
         </div>
       )}
 
+      {showInfo && <InfoOverlay onClose={() => setShowInfo(false)} />}
     </div>
   );
 }

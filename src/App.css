@@ -1,204 +1,246 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap");
-
-#canvas-container {
-  transform: translateZ(0);
-  isolation: isolate;
-}
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Roboto:wght@400&display=swap");
 
 body {
   margin: 0;
   overflow: hidden;
   background-color: #f7f7f5;
-  /* A soft, calming off-white instead of harsh pure white */
 }
 
 #canvas-container {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
   isolation: isolate;
-}
-
-/* --- THE NEW STRUCTURAL HUD CARD --- */
-.fbc-container {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  width: 300px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  /* 2px vertical gap between the rows */
-  z-index: 30;
-  pointer-events: auto;
-
-  /* Font styling matching your requirements */
-  font-family: "Inter", sans-serif;
-  font-weight: 400;
-  /* Regular */
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
-  /* White at 75% */
-  text-transform: uppercase;
-
-  animation: slideUpFade 0.4s ease-out forwards;
-}
-
-@keyframes slideUpFade {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fbc-row {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  /* 2px horizontal gap between left/right blocks */
-  width: 100%;
-}
-
-.fbc-info {
-  width: 83px; 
-  flex-shrink: 0; 
-  padding: 5px 10px; 
-  box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.35); 
-  
-  /* Just the pure blur */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.fbc-data {
-  flex: 1; 
-  padding: 5px 10px; 
-  box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.35); 
-  
-  /* Just the pure blur */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 /* --- THE DREAMY WHITE VIGNETTE --- */
 .frosted-frame {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none;
-  will-change: transform;
-  transform: translateZ(0);
-
-  /* A soft, milky white overlay instead of the dark tint */
-  background-color: rgba(255, 255, 255, 0.1);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  -webkit-mask-image: radial-gradient(
-    circle at center,
-    transparent 35%,
-    black 100%
-  );
-  mask-image: radial-gradient(circle at center, transparent 35%, black 100%);
-
   z-index: 10;
+  background-color: rgba(247, 247, 245, 0.01);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-mask-image: radial-gradient(circle at center, transparent 50%, black 100%);
+  mask-image: radial-gradient(circle at center, transparent 50%, black 100%);
 }
 
-/* --- THE NEW EDITORIAL NAVIGATION BAR --- */
+.frosted-frame::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(
+    circle at center,
+    transparent 60%,
+    rgba(247, 247, 245, 0.3) 85%,
+    rgba(247, 247, 245, 1) 100%
+  );
+}
+
+/* --- NAVIGATION --- */
 .nav-container {
   position: absolute;
   top: 2px;
-  /* Margin top */
   left: 2px;
-  /* Margin left */
   display: flex;
-  z-index: 20;
+  z-index: 300;
   pointer-events: none;
 }
 
-.nav-left {
-  display: flex;
-}
-
 .nav-item {
-  padding: 5px 120px 5px 10px; 
-  margin-right: 2px; 
-  width: fit-content;
-  background-color: rgba(0, 0, 0, 0.35); 
-  color: rgba(255, 255, 255, 0.75); 
+  padding: 5px 120px 5px 10px;
+  margin-right: 2px;
+  background-color: rgba(20, 20, 20, 0.38);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  color: rgba(255, 255, 255, 0.75);
   font-family: 'Inter', sans-serif;
-  font-weight: 400; 
   font-size: 12px;
-  text-transform: uppercase; 
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  
-  /* Just the pure blur, no transform hacks! */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  
-  border-radius: 0px; 
-  pointer-events: auto; 
+  text-transform: uppercase;
+  pointer-events: auto;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  transform: translateZ(0);
-  will-change: backdrop-filter;
-  background-color: rgba(20, 20, 20, 0.7);
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
 }
 
-/* Make sure the very last item doesn't have an extra margin pushing it out */
-.nav-item:last-child {
-  margin-right: 0;
+.nav-item.selected,
+.nav-item.active { background-color: rgba(0, 0, 0, 0.6); color: #fff; }
+
+/* --- HUD CARD --- */
+.fbc-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 50;
+  pointer-events: auto;
 }
 
-/* Hover & Selected States */
-.nav-item:hover,
-.nav-item.selected {
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Slightly darker on hover */
-  color: rgba(255, 255, 255, 1);
-  /* Full white text on hover */
+.fbc-row { display: flex; flex-direction: row; gap: 2px; width: 100%; }
+
+.fbc-info, .fbc-data {
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.28);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
+.fbc-info { width: 83px; flex-shrink: 0; }
+.fbc-data { flex: 1; }
+
+/* --- INFORMATION OVERLAY --- */
+.info-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.10);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  z-index: 200;
+  animation: overlayFadeIn 0.3s ease forwards;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 28px 5px 10px 5px;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.info-image {
+  width: 25%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+
+.info-text-parent {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.info-glass {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.info-glass--title {
+  padding: 6px 6px 5.7px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.info-glass--body {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.info-glass--works-title {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.info-works-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.info-works-cell {
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.info-works-cell--project {
+  flex: 1;
+}
+
+.info-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 1.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.info-text--body {
+  text-transform: none;
+}
+
+/* --- RESPONSIVE FIXES --- */
 @media (max-width: 768px) {
-  /* 1. Make the navigation container fill the entire width of the screen */
   .nav-container {
-    width: calc(100vw - 4px);
-    /* 100% of viewport width, minus the 2px left and 2px right margins */
+    left: 2px;
     right: 2px;
   }
 
-  /* 2. Adjust the buttons to fit */
   .nav-item {
-    padding: 5px 10px 5px 10px; 
-    flex: 1; 
-    justify-content: flex-start;
-    /* REVERTED back to 35% opacity to allow the blur to show */
-     background-color: rgba(0, 0, 0, 0.55); /* fallback, slightly darker */
-     background-color: rgba(0, 0, 0, 0.35); /* original, used when blur works */
-    transform: translateZ(0);
-    will-change: backdrop-filter;
+    flex: 1;
+    padding: 5px 10px;
+    text-align: left;
+    margin-right: 2px;
   }
 
-  /* 3. Also make sure the bottom HUD card doesn't overflow on very tiny phones */
+  .nav-item:last-child { margin-right: 0; }
+
   .fbc-container {
-    width: calc(100vw - 20px);
-    /* 100% width minus the 10px left and 10px right margins */
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    width: auto;
   }
-  .fbc-info, .fbc-data {
-    background-color: rgba(0, 0, 0, 0.35);
-    transform: translateZ(0);
-    will-change: backdrop-filter;
-    
+
+  .info-image {
+    width: 90%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  .info-text-parent {
+    width: 90%;
   }
 }
