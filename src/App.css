@@ -53,7 +53,7 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 
 /* --- NAVIGATION --- */
 .dropdown-nav-container {
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
@@ -78,15 +78,18 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   gap: 5px;
   z-index: 1;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transform: translateY(0);
-  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+  transform: translateY(0) translateZ(0);
+  will-change: transform, opacity;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.35s;
 }
 
 .dropdown-nav-container.open .dropdown-nav-items {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
-  transform: translateY(36px);
+  transform: translateY(36px) translateZ(0);
 }
 
 .dropdown-item {
@@ -98,9 +101,13 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   align-items: center;
   justify-content: space-between;
   border-radius: 100px;
-  background-color: rgba(240, 240, 240, 0.5);
+  background-color: rgba(240, 240, 240, 0.55);
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   color: #000;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -108,11 +115,11 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   line-height: 1em;
   cursor: pointer;
   pointer-events: auto;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 .dropdown-item:hover {
-  background-color: rgba(220, 220, 220, 0.6);
+  background-color: rgba(220, 220, 220, 0.7);
 }
 
 /* --- HUD CARD --- */
@@ -588,8 +595,8 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 
 /* --- VIEW NAVIGATION --- */
 .view-nav-container {
-  position: absolute;
-  bottom: 10px;
+  position: fixed;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   width: 200px;
@@ -612,22 +619,29 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   gap: 5px;
   z-index: 1;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transform: translateY(0);
-  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+  transform: translateY(0) translateZ(0);
+  will-change: transform, opacity;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.35s;
 }
 
 .view-nav-container.open .view-nav-columns {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
-  transform: translateY(-32px);
+  transform: translateY(-34px) translateZ(0);
 }
 
 .view-nav-btn {
   flex: 1;
-  background-color: rgba(240, 240, 240, 0.5);
+  background-color: rgba(240, 240, 240, 0.55);
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   padding: 8px 12px;
   border-radius: 100px;
   display: flex;
@@ -638,15 +652,15 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   font-weight: 500;
   font-size: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .view-nav-btn:hover {
-  background-color: rgba(220, 220, 220, 0.6);
+  background-color: rgba(220, 220, 220, 0.7);
 }
 
 .view-nav-btn.active {
-  background-color: rgba(180, 180, 180, 0.8);
+  background-color: rgba(180, 180, 180, 0.85);
   color: #000;
 }
 
