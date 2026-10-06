@@ -275,6 +275,43 @@ function InfoOverlay({ onClose }) {
             </svg>
           </button>
 
+          {/* Mobile Accordion */}
+          <div className={`credits-accordion ${showCredits ? 'open' : ''}`}>
+            <div className="credits-body-glass">
+              <p className="info-text credits-item">
+                <span>Art Direction: </span>
+                <a
+                  href="https://www.instagram.com/bruis3s__/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="credits-link"
+                >
+                  Bruis3s
+                </a>
+              </p>
+              <p className="info-text credits-item">
+                <span>Design + Development : </span>
+                <a
+                  href="https://www.instagram.com/bruis3s__/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="credits-link"
+                >
+                  Bruis3s
+                </a>
+                <span>,  </span>
+                <a
+                  href="https://www.instagram.com/gabelnstudio/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="credits-link"
+                >
+                  Gabeln Studio
+                </a>
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
 
