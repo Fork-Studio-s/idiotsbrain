@@ -503,6 +503,14 @@ export default function App() {
 
       <div className="frosted-frame"></div>
 
+      {/* ACCESSIBLE SEO HEADER */}
+      <header className="sr-only">
+        <h1>idiotsbrain — Director, Visual Artist &amp; Co-Founder of OUT OF FOCUS</h1>
+        <p>
+          Idiotsbrain is a Director, Visual Artist, Singer, and co-founder of OUT OF FOCUS, a production house based in Bandung. Crafting narrative visual experiences, music videos, and cinematic videography.
+        </p>
+      </header>
+
       {/* NAVIGATION */}
       <div className={`dropdown-nav-container ${isMenuOpen ? 'open' : ''}`}>
         <div className="dropdown-item dropdown-nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
