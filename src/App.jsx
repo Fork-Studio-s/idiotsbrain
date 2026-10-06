@@ -81,7 +81,7 @@ function ParticleUniverse({ activeNode, setActiveNode, isMobile, isExpanding, is
       return {
         id: i + 1,
         groupId: (i + 1 <= 6) ? 1 : (i + 1 <= 30) ? 2 : 3,
-        url: `/textures/img${i + 1}.JPG`,
+        url: `/textures/thumbs/img${i + 1}.JPG`,
         position: [Math.cos(theta) * r, y * globeRadius, Math.sin(theta) * r]
       };
     });
@@ -547,7 +547,9 @@ export default function App() {
         />
       )}
       {showInfo && <InfoOverlay onClose={() => setShowInfo(false)} />}
-      {showGallery && <ViewNavigation columns={columns} setColumns={handleSetColumns} />}
+      {showGallery && !showInfo && activeLightboxIndex === null && (
+        <ViewNavigation columns={columns} setColumns={handleSetColumns} />
+      )}
       {showGallery && activeLightboxIndex !== null && (
         <ProjectLightbox
           currentIndex={activeLightboxIndex}
@@ -589,7 +591,7 @@ function ProjectsGrid({ columns, onSelectImage }) {
       return {
         id,
         title: getGroupName(groupId),
-        src: `/textures/img${id}.JPG`,
+        src: `/textures/thumbs/img${id}.JPG`,
         delay: ((id * 37) % 35) / 10
       };
     });
@@ -623,6 +625,8 @@ function ProjectsGrid({ columns, onSelectImage }) {
             <img
               src={img.src}
               alt={`Gallery image ${img.id}`}
+              loading="lazy"
+              decoding="async"
               style={{ animationDelay: `${img.delay}s` }}
             />
           </div>
