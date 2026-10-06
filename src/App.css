@@ -55,9 +55,13 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 .dropdown-nav-container {
   position: fixed;
   top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   z-index: 300;
   pointer-events: none;
 }
@@ -69,27 +73,28 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 }
 
 .dropdown-nav-items {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 5px;
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transform: translateY(0) translateZ(0);
-  will-change: transform, opacity;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.35s;
+  position: relative;
+  z-index: 1;
 }
 
 .dropdown-nav-container.open .dropdown-nav-items {
-  opacity: 1;
-  visibility: visible;
+  display: flex;
   pointer-events: auto;
-  transform: translateY(36px) translateZ(0);
+  animation: dropdownSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownSlideDown {
+  from {
+    margin-top: -10px;
+  }
+  to {
+    margin-top: 0;
+  }
 }
 
 .dropdown-item {
@@ -101,13 +106,9 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   align-items: center;
   justify-content: space-between;
   border-radius: 100px;
-  background-color: rgba(240, 240, 240, 0.55);
+  background-color: rgba(240, 240, 240, 0.6);
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   color: #000;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -119,7 +120,7 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 }
 
 .dropdown-item:hover {
-  background-color: rgba(220, 220, 220, 0.7);
+  background-color: rgba(220, 220, 220, 0.75);
 }
 
 /* --- HUD CARD --- */
@@ -263,7 +264,6 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
   border: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -435,7 +435,6 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   cursor: pointer;
   color: #000;
   padding: 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
@@ -456,7 +455,6 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .credits-item {
@@ -597,9 +595,13 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 .view-nav-container {
   position: fixed;
   bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   z-index: 300;
   pointer-events: none;
 }
@@ -611,52 +613,53 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
 }
 
 .view-nav-columns {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  display: flex;
+  display: none;
   gap: 5px;
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transform: translateY(0) translateZ(0);
-  will-change: transform, opacity;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.35s;
+  position: relative;
+  z-index: 1;
 }
 
 .view-nav-container.open .view-nav-columns {
-  opacity: 1;
-  visibility: visible;
+  display: flex;
   pointer-events: auto;
-  transform: translateY(-34px) translateZ(0);
+  animation: viewSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes viewSlideUp {
+  from {
+    margin-bottom: -10px;
+  }
+  to {
+    margin-bottom: 0;
+  }
 }
 
 .view-nav-btn {
   flex: 1;
-  background-color: rgba(240, 240, 240, 0.55);
-  -webkit-backdrop-filter: blur(50px);
-  backdrop-filter: blur(50px);
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  height: fit-content;
   padding: 8px 12px;
-  border-radius: 100px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 100px;
+  background-color: rgba(240, 240, 240, 0.6);
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
   color: #000;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 10px;
+  line-height: 1em;
   cursor: pointer;
+  pointer-events: auto;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .view-nav-btn:hover {
-  background-color: rgba(220, 220, 220, 0.7);
+  background-color: rgba(220, 220, 220, 0.75);
 }
 
 .view-nav-btn.active {
@@ -749,7 +752,6 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   backdrop-filter: blur(50px);
   padding: 4px 6px;
   border-radius: 100px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .lightbox-btn {
@@ -783,7 +785,6 @@ button, a, .dropdown-item, .view-nav-btn, .project-cell, .credits-close-btn, .in
   -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
   border-radius: 50%;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .lightbox-btn--close:hover {
