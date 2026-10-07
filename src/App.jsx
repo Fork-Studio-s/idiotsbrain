@@ -71,6 +71,7 @@ function ParticleUniverse({ activeNode, setActiveNode, isMobile, isExpanding, is
   const groupRef = useRef();
   const count = 48;
   const globeRadius = isMobile ? 28 : 35;
+  const isFirstMountRef = useRef(true);
 
   const imageData = useMemo(() => {
     const phi = Math.PI * (3 - Math.sqrt(5));
@@ -97,6 +98,18 @@ function ParticleUniverse({ activeNode, setActiveNode, isMobile, isExpanding, is
 
   useEffect(() => {
     if (!groupRef.current) return;
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      if (isExpanding) {
+        gsap.set(groupRef.current.scale, { x: 12, y: 12, z: 12 });
+        groupRef.current.traverse((child) => {
+          if (child.isMesh && child.material) {
+            gsap.set(child.material, { opacity: 0 });
+          }
+        });
+        return;
+      }
+    }
     if (isExpanding) {
       // Warp speed expansion: images expand outward past the camera and into the distance
       gsap.to(groupRef.current.scale, {
@@ -376,15 +389,23 @@ function InfoOverlay({ onClose }) {
 
 const getGroupName = (id) => id === 1 ? "Analogue" : id === 2 ? "Campaign Aditya Tantra" : "Dongker";
 
+const getNormalizedPath = () => {
+  if (typeof window === 'undefined') return '/';
+  return window.location.pathname.replace(/\/+$/, '') || '/';
+};
+
 export default function App() {
   const isMobile = useIsMobile();
   const [activeNode, setActiveNode] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [currentPath, setCurrentPath] = useState(getNormalizedPath);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [columns, setColumns] = useState(() => (typeof window !== 'undefined' && window.innerWidth < 768 ? 3 : 6));
   const [activeLightboxIndex, setActiveLightboxIndex] = useState(null);
-  const [isExpanding, setIsExpanding] = useState(false);
+  const [isExpanding, setIsExpanding] = useState(() => {
+    const initial = getNormalizedPath();
+    return initial === '/gallery' || initial === '/projects';
+  });
   const [isContracting, setIsContracting] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const animatingRef = useRef(false);
@@ -423,7 +444,7 @@ export default function App() {
   useEffect(() => {
     const onPopState = () => {
       if (timelineRef.current) timelineRef.current.kill();
-      const path = window.location.pathname;
+      const path = getNormalizedPath();
       setCurrentPath(path);
       setActiveLightboxIndex(null);
       setIsTransitioning(false);
@@ -516,7 +537,8 @@ export default function App() {
     }, 900);
   };
 
-  const showGallery = currentPath === '/gallery' || currentPath === '/projects';
+  const normalizedCurrent = currentPath.replace(/\/+$/, '') || '/';
+  const showGallery = normalizedCurrent === '/gallery' || normalizedCurrent === '/projects';
 
   return (
     <div id="canvas-container">
